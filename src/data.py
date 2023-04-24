@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 from tensorflow import keras
 from keras.utils import to_categorical

@@ -3,7 +3,7 @@ Author: Souvik Majumder
 
 Perform smooth predictions on an image from tiled prediction patches.
 
-The modified code and the original code have been taken from the following sources.
+The modified version of the original code has been taken from the following source.
 
 Author: Dr. Sreenivas Bhattiprolu
 
