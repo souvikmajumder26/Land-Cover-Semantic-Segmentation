@@ -7,7 +7,7 @@ model:
   model_name: unet_resnet34_epochs20_batch16.h5
   backbone: resnet34
 inference:
-  data_dir: inference
+  data_dir: test_inference
   images_dir: images
   masks_dir: masks
   predicted_masks_dir: predicted_masks

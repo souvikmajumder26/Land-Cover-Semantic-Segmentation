@@ -1,7 +1,8 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-def custom_logger(name, log_path, log_level):
+def custom_logger(name, log_path, log_level="DEBUG"):
+
     logger = logging.getLogger(name)
     
     if log_level == "DEBUG":
@@ -43,4 +44,5 @@ def custom_logger(name, log_path, log_level):
         handler_file.setLevel(logging.INFO)
 
     logger.addHandler(handler_file)
-    return
+
+    return logger

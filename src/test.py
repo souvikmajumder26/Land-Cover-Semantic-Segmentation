@@ -13,7 +13,7 @@ from keras.models import load_model
 
 from utils.data_processing import preprocess_img, postprocess_mask
 from utils.smooth_tiled_predictions import predict_img_with_smooth_windowing
-from utils.plots import plot_inference
+from utils.plots import plot_test
 
 
 def get_root():
@@ -54,11 +54,15 @@ if __name__ == "__main__":
     log_path = log_path.as_posix()
     
     # initialize the logger
-    logger = custom_logger("Land Cover Semantic Segmentation Inferencing Logs", log_path, log_level)
+    logger = custom_logger("Land Cover Semantic Segmentation Testing Logs", log_path, log_level)
 
     # get the dir of input images for inference from config
     img_dir = ROOT / slice_config['general']['data_dir'] / slice_config['inference']['data_dir'] / slice_config['inference']['images_dir']
     img_dir = img_dir.as_posix()
+
+    # get the dir of labelled masks for inference from config
+    labelled_mask_dir = ROOT / slice_config['general']['data_dir'] / slice_config['inference']['data_dir'] / slice_config['inference']['masks_dir']
+    labelled_mask_dir = labelled_mask_dir.as_posix()
 
     # get the model path from config
     model_path = ROOT / slice_config['model']['model_dir'] / slice_config['model']['model_name']
@@ -88,6 +92,13 @@ if __name__ == "__main__":
                 input_img = preprocess_img(img, backbone)
             except Exception as e:
                 logger.error("Image reading and preprocessing failed!")
+                raise e
+
+            try:
+                labelled_mask = cv2.imread(os.path.join(labelled_mask_dir, filename), 0)   # read as grayscale
+                # labelled_mask = cv2.resize(labelled_mask, (0, 0), fx = 0.5, fy = 0.5, interpolation = cv2.INTER_AREA)   # NOTE: test with this if RAM is too less to process large images
+            except Exception as e:
+                logger.error("Labelled masks for the test images do not exist at %s! If you wish to only infer on test images, run the 'inference.py'." % labelled_mask_dir)
                 raise e
 
             try:
@@ -128,13 +139,13 @@ if __name__ == "__main__":
 
             try:
                 # Plot the predicted masks along with the original images and masks and save them
-                plot_inference(img, pred_mask, pred_plot_dir, filename)
+                plot_test(img, labelled_mask, pred_mask, pred_plot_dir, filename)
             except Exception as e:
-                logger.error("Plotting the predicted mask along with the corresponding image and saving them failed!")
+                logger.error("Plotting the predicted mask along with the corresponding image and labelled mask and saving them failed!")
                 raise e
 
     except Exception as e:
-        logger.error("Images for inferencing do not exist at %s!" % img_dir)
+        logger.error("Images for testing do not exist at %s!" % img_dir)
         raise e
 
         ###########################################################################################################
