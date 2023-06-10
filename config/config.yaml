@@ -1,0 +1,26 @@
+general:
+  data_dir: data
+  patch_size: 256
+  n_classes: 5
+model:
+  model_dir: models
+  model_name: unet_resnet34_epochs20_batch16.h5
+  backbone: resnet34
+inference:
+  data_dir: test_inference
+  images_dir: images
+  masks_dir: masks
+  predicted_masks_dir: predicted_masks
+  prediction_plots_dir: prediction_plots
+optimizer:
+  learning_rate: 0.10
+train:
+  script_dir: src
+  script_name: train.py
+test:
+  script_dir: src
+  script_name: test.py
+log:
+  log_dir: logs
+  log_name: app.log
+  log_level: DEBUG  # set the log level 
