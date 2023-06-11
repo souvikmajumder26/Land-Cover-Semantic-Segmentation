@@ -1,42 +1,21 @@
 import os
-import sys
-import yaml
-from yaml import SafeLoader
-from pathlib import Path
-
-from utils.constants import Constants
-from utils.logger import custom_logger
-
 import cv2
 from tensorflow import keras
 from keras.models import load_model
 
+from utils.constants import Constants
+from utils.logger import custom_logger
+from utils.root_config import get_root_config
 from utils.data_processing import preprocess_img, postprocess_mask
 from utils.smooth_tiled_predictions import predict_img_with_smooth_windowing
 from utils.plots import plot_inference
-
-
-def get_root():
-    # get the desired parent directory as root path
-    ROOT = Path(__file__).resolve().parents[1]
-
-    # add ROOT to sys.path if not present
-    if str(ROOT) not in sys.path:
-        # add ROOT to sys.path
-        sys.path.append(str(ROOT))
-
-    # load the config and parse it into a dictionary
-    with open(ROOT / Constants.CONFIG_PATH.value) as f:
-        slice_config = yaml.load(f, Loader = SafeLoader)
-    
-    return ROOT, slice_config
 
 
 if __name__ == "__main__":
 
     ################################# Loading Variables and Paths from Config #################################
 
-    ROOT, slice_config = get_root()
+    ROOT, slice_config = get_root_config(Constants)
 
     # get the required variable values from config
     backbone = slice_config['model']['backbone']        # the backbone/encoder of the model
